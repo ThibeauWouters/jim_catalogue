@@ -1,0 +1,1 @@
+python run.py --event-id GW200219_094415
