@@ -90,19 +90,25 @@ def run_pe(args: argparse.Namespace,
     local_filename = pe_url.split("/")[-2]
     local_filename = os.path.join(args.outdir, args.event_id, local_filename)
         
-    # Load it with requests
-    print(f"Loading PE results from {pe_url}, saving it to {local_filename}")
-    response = requests.get(url, stream=True)
-
-    # Open the local file in write-binary mode
-    with open(local_filename, 'wb') as file:
-        # Write the content in chunks to avoid loading large files into memory
-        for chunk in response.iter_content(chunk_size=8192):
-            file.write(chunk)        
+    # Check if the request was successful
+    response = requests.get(pe_url, stream=True)
+    if response.status_code == 200:
+        # Open the file in write-binary mode and write the content
+        with open(local_filename, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:  # filter out keep-alive chunks
+                    f.write(chunk)
+        print(f"File saved as {local_filename}")
+    else:
+        raise ValueError(f"Failed to download file. Status code: {response.status_code}")
     
     # Open the file to check the contents
     with h5py.File(local_filename, "r") as f:
         print("Keys: %s" % f.keys())
+        
+        data = f["C01:Mixed"]
+        psds = data["psds"]
+        print(psds.keys())
     
     ### Handle strain data
     strain: list[dict] = json_data["strain"]
@@ -149,8 +155,9 @@ def run_pe(args: argparse.Namespace,
         with h5py.File(local_filename, "r") as f:
             strain_data = f["strain"]["Strain"]
             
-            print("strain_data")
-            print(strain_data)
+            if verbose:
+                print("strain_data")
+                print(strain_data)
             
             
         # print("Adding interferometer ", ifo_string)

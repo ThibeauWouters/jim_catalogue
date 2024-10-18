@@ -1,0 +1,1 @@
+{"outdir": "/home/daniel.williams/events/O3/o3b/run_directories/S200220ad/Prod8", "duration": 4.0, "detectors": ["L1", "H1", "V1"], "f_min": {"H1": 20, "L1": 20, "V1": 20}, "f_max": {"H1": 224, "L1": 224, "V1": 224}}

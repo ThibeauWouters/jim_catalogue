@@ -1,0 +1,1 @@
+{"outdir": "/scratch/daniel.williams/O3b_PE/S1911261l/Prod8", "duration": 64.0, "detectors": ["L1", "H1"], "f_min": {"H1": 20, "L1": 20}, "f_max": {"H1": 1792, "L1": 1792}}
