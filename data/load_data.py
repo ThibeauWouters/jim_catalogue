@@ -205,11 +205,11 @@ def main():
             with open(os.path.join(outdir, "metadata.json"), "w") as f:
                 json.dump(metadata, f)
             
-            # Also try to get the PE samples, but this might not work        
-            success, pe_samples = get_pe_samples(metadata["webdir"], outdir = outdir)
-            if success:
-                # Save the pe samples:
-                np.savez(os.path.join(outdir, "LIGO_PE_samples.npz"), samples=pe_samples)
+            # # Also try to get the PE samples, but this might not work        
+            # success, pe_samples = get_pe_samples(metadata["webdir"], outdir = outdir)
+            # if success:
+            #     # Save the pe samples:
+            #     np.savez(os.path.join(outdir, "LIGO_PE_samples.npz"), samples=pe_samples)
                     
         # break
                 
