@@ -111,6 +111,9 @@ def get_data_and_psd(run_dir: str, outdir: str = "./outdir/") -> int:
     except Exception as e:
         print(f"Error when trying to open the datadump file: {e}")
         return
+    
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
         
     for ifo in ifo_list:
         # Get the strain
@@ -149,21 +152,22 @@ def main():
         metadata = load_event_metadata(event_id)
         if metadata == {}:
             print(f"Metadata failed, skipping")
-            continue
-        
             failed_events.append(event_id)
+            continue
         
         else:
             # Save the metadata
             outdir = f"./outdir/{event_id}/"
-            if not os.path.exists(outdir):
-                os.makedirs(outdir)
-            with open(os.path.join(outdir, "metadata.json"), "w") as f:
-                json.dump(metadata, f)
         
             success = get_data_and_psd(metadata["outdir"], outdir = outdir)
             if not success:
                 failed_events.append(event_id)
+                
+            else:
+                if not os.path.exists(outdir):
+                    os.makedirs(outdir)
+                with open(os.path.join(outdir, "metadata.json"), "w") as f:
+                    json.dump(metadata, f)
                 
     print(f"There were {len(failed_events)}/{len(event_ids)} failed events: {failed_events}")
         

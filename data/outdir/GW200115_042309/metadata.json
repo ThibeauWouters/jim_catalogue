@@ -1,1 +1,0 @@
-{"outdir": "/home/daniel.williams/events/O3/o3b/run_directories/GW200115A/ProdP13", "duration": 64.0, "detectors": ["H1", "L1", "V1"], "trigger_time": 1263097407.742, "f_min": {"H1": 20, "L1": 20, "V1": 20}, "f_max": {"H1": 1792, "L1": 1792, "V1": 1792}}
