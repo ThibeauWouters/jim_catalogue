@@ -4,12 +4,20 @@ import json
 import pickle
 import h5py
 import numpy as np
+import pandas as pd
+
+################
+### PREAMBLE ###
+################
+
+df = pd.read_csv("./GWTC3_confident.csv")
+event_ids = df["commonName"].values
 
 ZENODO_DIR = "/home/thibeau.wouters/gw-datasets/GWTC-3/"
-all_zenodo_files = [f for f in os.listdir(ZENODO_DIR) if f.endswith(".h5")]
+all_zenodo_files = [f for f in os.listdir(ZENODO_DIR) if "nocosmo" in f and f.endswith(".h5")]
 
-example_event_id = "GW191204_171526"
-example_file = os.path.join(ZENODO_DIR, "IGWN-GWTC3p0-v2-GW191204_171526_PEDataRelease_mixed_nocosmo.h5")
+print("all_zenodo_files")
+print(all_zenodo_files)
 
 def my_decode(x):
     return x[0].decode('utf-8')
@@ -101,11 +109,16 @@ def get_data_and_psd(run_dir: str, outdir: str = "./outdir/") -> None:
         
         
 # Test it
-metadata = load_event_metadata(example_event_id)
-run_dir = metadata["outdir"]
-get_data_and_psd(run_dir)
 
-print("all_zenodo_files")
-print(all_zenodo_files)
-
+def main():
+    
+    # example_event_id = "GW200220_061928"
+    # example_file = os.path.join(ZENODO_DIR, f"IGWN-GWTC3p0-v2-{example_event_id}_PEDataRelease_mixed_nocosmo.h5")
+    
+    for event_id in event_ids:
+        print(f"--- Processing for event {event_id} ---")
+        metadata = load_event_metadata(event_id)
+        run_dir = metadata["outdir"]
+        get_data_and_psd(run_dir, outdir = f"./outdir/{event_id}/")
+        
 print("DONE")
