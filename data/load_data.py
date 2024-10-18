@@ -182,6 +182,7 @@ def get_pe_samples(webdir: str, outdir: str = "./outdir/") -> tuple[int, np.arra
 def main():
     
     failed_events = []
+    succesful_events = []
     
     for event_id in event_ids:
         print(f"\n\n\n--- Processing for event {event_id} ---\n\n\n")
@@ -210,10 +211,13 @@ def main():
             # if success:
             #     # Save the pe samples:
             #     np.savez(os.path.join(outdir, "LIGO_PE_samples.npz"), samples=pe_samples)
-                    
-        # break
+               
+        succesful_events.append(event_id)
                 
     print(f"There were {len(failed_events)}/{len(event_ids)} failed events: {failed_events}")
+    
+    print("The succesful events are:")
+    print(succesful_events)
         
 if __name__ == "__main__":
     main()
