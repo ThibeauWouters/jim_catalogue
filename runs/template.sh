@@ -3,7 +3,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -p gpu
-#SBATCH -t 20:00
+#SBATCH -t 40:00
 #SBATCH --gpus-per-node=1
 #SBATCH --cpus-per-gpu=1
 #SBATCH --mem-per-gpu=10G

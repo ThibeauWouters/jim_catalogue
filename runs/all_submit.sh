@@ -10,7 +10,7 @@ template_file="template.sh"
 for gw_id in "${gw_ids[@]}"
 do
   # Create a unique SLURM script for each GW event
-  new_script="submit_${gw_id}.sh"
+  new_script="slurm_scripts/submit_${gw_id}.sh"
   cp $template_file $new_script
   
   # Replace the placeholder with the actual GW_ID

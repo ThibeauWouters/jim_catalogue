@@ -242,7 +242,7 @@ def run_pe(args: argparse.Namespace,
 
     import optax
 
-    n_loop_training = 3
+    n_loop_training = 100
     n_epochs = 10
     total_epochs = n_epochs * n_loop_training
     start = total_epochs // 10
@@ -256,7 +256,7 @@ def run_pe(args: argparse.Namespace,
         sample_transforms=sample_transforms,
         likelihood_transforms=likelihood_transforms,
         n_loop_training=n_loop_training,
-        n_loop_production=3,
+        n_loop_production=10,
         n_local_steps=10,
         n_global_steps=1000,
         n_chains=500,

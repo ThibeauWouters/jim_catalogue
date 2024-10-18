@@ -3,17 +3,17 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -p gpu
-#SBATCH -t 20:00
+#SBATCH -t 40:00
 #SBATCH --gpus-per-node=1
 #SBATCH --cpus-per-gpu=1
 #SBATCH --mem-per-gpu=10G
-#SBATCH --job-name=GW191103_012549
+#SBATCH --job-name=GW191109_010717
 
 now=$(date)
 echo "$now"
 
 # Define dirs
-export GW_ID=GW191103_012549
+export GW_ID=GW191109_010717
 export data_dir=$HOME/projects/jim_catalogue/data/outdir/$GW_ID
 export outdir=$HOME/projects/jim_catalogue/runs/outdir/$GW_ID
 
