@@ -27,7 +27,7 @@ from jimgw.prior import (
     PowerLawPrior,
     UniformSpherePrior,
 )
-from jimgw.single_event.detector import H1, L1, V1
+from jimgw.single_event.detector import H1, L1, V1, GroundBased2G
 from jimgw.single_event.likelihood import TransientLikelihoodFD
 from jimgw.single_event.waveform import RippleIMRPhenomPv2
 from jimgw.transforms import BoundToUnbound
@@ -47,7 +47,7 @@ jax.config.update("jax_enable_x64", True)
 import argparse
 import pandas as pd
 
-GWTC_EVENT_CSV = "../metadata/GWTC3_confident.csv"
+GWTC_EVENT_CSV = "../data/GWTC3_confident.csv"
 
 def run_pe(args: argparse.Namespace,
            verbose: bool = True,
@@ -68,7 +68,8 @@ def run_pe(args: argparse.Namespace,
     
     # Get the preprocessed data
     data_dir = f"../data/outdir/{args.event_id}/"
-    metadata = json.load(os.path.join(data_dir, "metadata.json"))
+    with open(os.path.join(data_dir, "metadata.json"), "r") as f:
+        metadata = json.load(f)
     
     if verbose:
         print("metadata")
@@ -84,6 +85,9 @@ def run_pe(args: argparse.Namespace,
     fmin = np.min(list(fmin.values()))
     fmax = np.min(list(fmax.values()))
     
+    fmin = max(fmin, 20.0)
+    fmax = min(fmax, 2048.0)
+    
     ifos_list_string = metadata["detectors"]
     
     if verbose:
@@ -94,7 +98,7 @@ def run_pe(args: argparse.Namespace,
         print(fmax)
     
     # Load the HDF5 files from the ifos dict url and open it:
-    ifos = []
+    ifos: list[GroundBased2G] = []
     for i, ifo_string in enumerate(ifos_list_string):
         
         print("Adding interferometer ", ifo_string)
@@ -103,16 +107,32 @@ def run_pe(args: argparse.Namespace,
         # Load the data
         data_file = os.path.join(data_dir, f"{ifo_string}_datadump.npz")
         print(f"Loading data for {ifo_string} from {data_file}")
-        data = np.load(data_file)
+        datadump = np.load(data_file)
     
-        ifos[i].frequencies = data["frequencies"]
-        ifos[i].data = data["data"]
-        ifos[i].psd = data["psd"]
+        frequencies, data, psd = datadump["frequencies"], datadump["data"], datadump["psd"]
+        
+        mask = (frequencies >= fmin) & (frequencies <= fmax)
+        frequencies = frequencies[mask]
+        data = data[mask]
+        psd = psd[mask]
+    
+        ifos[i].frequencies = frequencies
+        ifos[i].data = data
+        ifos[i].psd = psd
+        
+        if verbose:
+            print(f"Checking data for {ifo_string}")
+            print(f"Data shape: {ifos[i].data.shape}")
+            print(f"PSD shape: {ifos[i].psd.shape}")
+            print(f"Frequencies shape: {ifos[i].frequencies.shape}")
+            
+            print(f"Data: {ifos[i].data}")
+            print(f"PSD: {ifos[i].psd}")
+            print(f"Frequencies: {ifos[i].frequencies}")
     
     if verbose:
         print(f"Running PE on event {args.event_id}")
-        # print(f"Chirp time: {chirp_time}")
-        # print(f"Duration: {duration}")
+        print(f"Duration: {duration}")
         print(f"GPS: {gps}")
         print(f"Chirp mass: {Mc}")
     
@@ -220,20 +240,20 @@ def run_pe(args: argparse.Namespace,
         sample_transforms=sample_transforms,
         likelihood_transforms=likelihood_transforms,
         n_loop_training=n_loop_training,
-        n_loop_production=args["n_loop_production"],
-        n_local_steps=args["n_local_steps"],
-        n_global_steps=args["n_global_steps"],
-        n_chains=args["n_chains"],
+        n_loop_production=args.n_loop_production,
+        n_local_steps=args.n_local_steps,
+        n_global_steps=args.n_global_steps,
+        n_chains=args.n_chains,
         n_epochs=n_epochs,
         learning_rate=learning_rate,
-        n_max_examples=args["n_max_examples"],
-        n_flow_sample=args["n_flow_sample"],
-        momentum=args["momentum"],
-        batch_size=args["batch_size"],
+        n_max_examples=args.n_max_examples,
+        n_flow_sample=args.n_flow_sample,
+        momentum=args.momentum,
+        batch_size=args.batch_size,
         use_global=True,
-        keep_quantile=args["keep_quantile"],
-        train_thinning=args["train_thinning"],
-        output_thinning=args["output_thinning"],
+        keep_quantile=args.keep_quantile,
+        train_thinning=args.train_thinning,
+        output_thinning=args.output_thinning,
         local_sampler_arg=local_sampler_arg,
         # strategies=[Adam_optimizer,"default"],
     )

@@ -1,0 +1,1 @@
+{"outdir": "/home/daniel.williams/events/O3/o3b/run_directories/S191230a/Prod6", "duration": 4.0, "detectors": ["H1", "L1", "V1"], "trigger_time": 1261764316.406738, "f_min": {"H1": 20, "L1": 20, "V1": 20}, "f_max": {"H1": 896, "L1": 896, "V1": 896}}

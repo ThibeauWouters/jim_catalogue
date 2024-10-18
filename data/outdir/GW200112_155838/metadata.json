@@ -1,1 +1,1 @@
-{"outdir": "/home/daniel.williams/events/O3/o3b/run_directories/S200112a/Prod8", "duration": 4.0, "detectors": ["L1", "V1"], "f_min": {"L1": 20, "V1": 20}, "f_max": {"L1": 896, "V1": 896}}
+{"outdir": "/home/daniel.williams/events/O3/o3b/run_directories/S200112a/Prod8", "duration": 4.0, "detectors": ["L1", "V1"], "trigger_time": 1262879936.090936, "f_min": {"L1": 20, "V1": 20}, "f_max": {"L1": 896, "V1": 896}}

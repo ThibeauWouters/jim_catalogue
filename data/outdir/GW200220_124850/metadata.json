@@ -1,1 +1,1 @@
-{"outdir": "./Prod21", "duration": 4.0, "detectors": ["H1", "L1"]}
+{"outdir": "./Prod21", "duration": 4.0, "detectors": ["H1", "L1"], "trigger_time": 1266238148.15}

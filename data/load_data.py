@@ -26,7 +26,7 @@ def my_decode(x):
     return x[0].decode('utf-8')
 
 def load_event_metadata(event_id: str,
-                        print_config: bool = False) -> dict:
+                        print_config: bool = True) -> dict:
     """
     Loads the event metadata from a Zenodo HDF5 file.
 
@@ -47,7 +47,13 @@ def load_event_metadata(event_id: str,
         print(f.keys())
         
         # Get the config
-        data = f["C01:IMRPhenomXPHM"]
+        try:
+            data = f["C01:IMRPhenomXPHM"]
+        except Exception as e:
+            print(f"Error when trying to get the data: {e}")
+            print("Trying with fetching HighSPin instead")
+            data = f["C01:IMRPhenomXPHM:HighSpin"]
+            
         config = data["config_file"]["config"]
         if print_config:
             print("--------------------------------")
@@ -60,6 +66,7 @@ def load_event_metadata(event_id: str,
         metadata["outdir"] = str(my_decode(config["outdir"][()]))
         metadata["duration"] = float(my_decode(config["duration"][()]))
         metadata["detectors"] = eval(my_decode(config["detectors"][()])) 
+        metadata["trigger_time"] = eval(my_decode(config["trigger-time"][()]))
         try:
             metadata["f_min"] = eval(my_decode(config["minimum-frequency"][()]))
             metadata["f_max"] = eval(my_decode(config["maximum-frequency"][()]))
@@ -71,7 +78,7 @@ def load_event_metadata(event_id: str,
         
     return metadata
 
-def get_data_and_psd(run_dir: str, outdir: str = "./outdir/") -> None:
+def get_data_and_psd(run_dir: str, outdir: str = "./outdir/") -> int:
     """
     Get the data and psd values from the outdir
     
@@ -82,7 +89,7 @@ def get_data_and_psd(run_dir: str, outdir: str = "./outdir/") -> None:
     
     if run_dir.startswith("./"):
         print("run_dir starts with ./, this is not allowed")
-        return
+        return 0
     
     try:
         data_dir = os.path.join(run_dir, "data")
@@ -131,7 +138,11 @@ def get_data_and_psd(run_dir: str, outdir: str = "./outdir/") -> None:
         strain = real_strain + 1j * imag_strain
         np.savez(os.path.join(outdir, f"{ifo.name}_datadump.npz"), frequencies=frequencies, data=strain, psd=psd_values)
         
+    return 1
+        
 def main():
+    
+    failed_events = []
     
     for event_id in event_ids:
         print(f"\n\n\n--- Processing for event {event_id} ---\n\n\n")
@@ -139,6 +150,8 @@ def main():
         if metadata == {}:
             print(f"Metadata failed, skipping")
             continue
+        
+            failed_events.append(event_id)
         
         else:
             # Save the metadata
@@ -148,7 +161,11 @@ def main():
             with open(os.path.join(outdir, "metadata.json"), "w") as f:
                 json.dump(metadata, f)
         
-            get_data_and_psd(metadata["outdir"], outdir = outdir)
+            success = get_data_and_psd(metadata["outdir"], outdir = outdir)
+            if not success:
+                failed_events.append(event_id)
+                
+    print(f"There were {len(failed_events)}/{len(event_ids)} failed events: {failed_events}")
         
 if __name__ == "__main__":
     main()
