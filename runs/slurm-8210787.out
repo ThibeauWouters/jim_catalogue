@@ -1,0 +1,51 @@
+Fri Oct 18 16:11:19 CEST 2024
+2024-10-18 16:11:21.342573: W external/xla/xla/service/gpu/nvptx_compiler.cc:836] The NVIDIA driver's CUDA version is 12.5 which is older than the PTX compiler version (12.6.77). Because the driver is older than the PTX compiler version, XLA is disabling parallel compilation, which may slow down compilation. You should update your NVIDIA driver or use the NVIDIA-provided CUDA forward compatibility packages.
+Importing JAX
+Importing JAX successful
+Checking for CUDA: JAX devices [CudaDevice(id=0)]
+args
+Namespace(outdir='./outdir/', event_id='GW191204_110529', n_epochs=20, n_loop_training=5, n_loop_production=5, n_local_steps=10, n_global_steps=1000, n_chains=500, n_max_examples=30000, n_flow_sample=100000, momentum=0.9, batch_size=30000, use_global=True, keep_quantile=0.0, train_thinning=1, output_thinning=10)
+metadata
+{'f_min': {'H1': 20, 'L1': 20}, 'f_max': {'H1': 896, 'L1': 896}, 'outdir': '/home/daniel.williams/events/O3/o3b/run_directories/GW191204_171526/Prod9', 'webdir': '/home/pe.o3/public_html/LVC/o3b-catalog//GW191204_171526/Prod9', 'duration': 8.0, 'detectors': ['L1', 'H1'], 'trigger_time': 1259492747.4916}
+fmin
+20
+fmax
+896
+Adding interferometer  L1
+Loading data for L1 from ../data/outdir/GW191204_110529/L1_datadump.npz
+Checking data for L1
+Data shape: (7009,)
+PSD shape: (7009,)
+Frequencies shape: (7009,)
+Data: [-1.03830980e-22-1.95740848e-22j -2.38240899e-22-2.30805532e-22j
+  1.59463944e-22-9.37908534e-23j ...
+  1.12355050e-23-1.76069313e-24j -1.97026092e-24-2.88448275e-24j
+  1.53611014e-23+1.90656983e-23j]
+PSD: [1.41041e-44 1.30189e-44 1.20235e-44 ... 6.19387e-47 6.19397e-47
+ 6.19410e-47]
+Frequencies: [ 20.     20.125  20.25  ... 895.75  895.875 896.   ]
+Adding interferometer  H1
+Loading data for H1 from ../data/outdir/GW191204_110529/H1_datadump.npz
+Checking data for H1
+Data shape: (7009,)
+PSD shape: (7009,)
+Frequencies shape: (7009,)
+Data: [-4.45363235e-22-7.44553216e-22j  3.59183055e-21-8.13164152e-22j
+  6.28233939e-22-3.00006991e-22j ...
+ -2.13309769e-23-1.75603895e-23j  6.03568833e-24-6.95958463e-24j
+  5.29828429e-24-1.18122769e-24j]
+PSD: [5.60768e-43 7.11429e-43 8.35556e-43 ... 8.81513e-47 8.81410e-47
+ 8.81307e-47]
+Frequencies: [ 20.     20.125  20.25  ... 895.75  895.875 896.   ]
+Running PE on event GW191204_110529
+Duration: 8.0
+GPS: 1259492747.4916
+Chirp mass: 26.532000000000004
+Initializing heterodyned likelihood..
+No reference parameters are provided, finding it...
+Starting the optimizer
+Using Adam optimization
+The reference parameters are {'psi': 2.416279268899881, 'iota': 0.8098017877041309, 'M_c': 25.5889378190295, 'ra': 3.9739364002154254, 'dec': -0.18120087043192856, 't_c': 0.0816617108322017, 'phase_c': 5.765608876444551, 'd_L': 1161.582997398383, 'eta': 0.24599940968456474, 's1_x': -0.2225991877799652, 's1_y': -0.15063368786739403, 's1_z': -0.7438553416133533, 's2_x': 0.20898882357210344, 's2_y': -0.21110641433746558, 's2_z': -0.4728832651821984}
+Constructing reference waveforms..
+Using sample transforms
+Global Tuning:   0%|          | 0/100 [00:00<?, ?it/s]Global Tuning:   1%|          | 1/100 [03:04<5:03:38, 184.03s/it]Global Tuning:   2%|▏         | 2/100 [03:10<2:10:09, 79.69s/it] Global Tuning:   3%|▎         | 3/100 [03:17<1:14:54, 46.34s/it]Global Tuning:   4%|▍         | 4/100 [03:23<49:03, 30.67s/it]  Global Tuning:   5%|▌         | 5/100 [03:30<34:50, 22.00s/it]Global Tuning:   6%|▌         | 6/100 [03:37<26:17, 16.78s/it]Global Tuning:   7%|▋         | 7/100 [03:43<20:52, 13.47s/it]Global Tuning:   8%|▊         | 8/100 [03:50<17:18, 11.29s/it]Global Tuning:   9%|▉         | 9/100 [03:57<14:55,  9.84s/it]Global Tuning:  10%|█         | 10/100 [04:03<13:16,  8.85s/it]Global Tuning:  11%|█         | 11/100 [04:10<12:07,  8.17s/it]Global Tuning:  12%|█▏        | 12/100 [04:17<11:18,  7.71s/it]Global Tuning:  13%|█▎        | 13/100 [04:23<10:42,  7.39s/it]Global Tuning:  14%|█▍        | 14/100 [04:30<10:15,  7.16s/it]Global Tuning:  15%|█▌        | 15/100 [04:37<09:55,  7.01s/it]Global Tuning:  16%|█▌        | 16/100 [04:43<09:39,  6.89s/it]Global Tuning:  17%|█▋        | 17/100 [04:50<09:25,  6.82s/it]Global Tuning:  18%|█▊        | 18/100 [04:56<09:14,  6.76s/it]Global Tuning:  19%|█▉        | 19/100 [05:03<09:04,  6.73s/it]Global Tuning:  20%|██        | 20/100 [05:10<08:56,  6.70s/it]Global Tuning:  21%|██        | 21/100 [05:16<08:48,  6.69s/it]Global Tuning:  22%|██▏       | 22/100 [05:23<08:40,  6.68s/it]Global Tuning:  23%|██▎       | 23/100 [05:30<08:33,  6.67s/it]Global Tuning:  24%|██▍       | 24/100 [05:36<08:26,  6.66s/it]Global Tuning:  25%|██▌       | 25/100 [05:43<08:19,  6.65s/it]Global Tuning:  26%|██▌       | 26/100 [05:50<08:11,  6.65s/it]Global Tuning:  27%|██▋       | 27/100 [05:56<08:04,  6.64s/it]Global Tuning:  28%|██▊       | 28/100 [06:03<07:58,  6.64s/it]Global Tuning:  29%|██▉       | 29/100 [06:09<07:51,  6.64s/it]Global Tuning:  30%|███       | 30/100 [06:16<07:44,  6.64s/it]Global Tuning:  31%|███       | 31/100 [06:23<07:37,  6.64s/it]Global Tuning:  32%|███▏      | 32/100 [06:29<07:31,  6.64s/it]Global Tuning:  33%|███▎      | 33/100 [06:36<07:24,  6.64s/it]Global Tuning:  34%|███▍      | 34/100 [06:43<07:17,  6.64s/it]Global Tuning:  35%|███▌      | 35/100 [06:49<07:11,  6.64s/it]Global Tuning:  36%|███▌      | 36/100 [06:56<07:04,  6.64s/it]Global Tuning:  37%|███▋      | 37/100 [07:03<06:58,  6.64s/it]Global Tuning:  38%|███▊      | 38/100 [07:09<06:51,  6.64s/it]Global Tuning:  39%|███▉      | 39/100 [07:16<06:44,  6.63s/it]Global Tuning:  40%|████      | 40/100 [07:22<06:38,  6.64s/it]Global Tuning:  41%|████      | 41/100 [07:29<06:31,  6.64s/it]Global Tuning:  42%|████▏     | 42/100 [07:36<06:25,  6.64s/it]Global Tuning:  43%|████▎     | 43/100 [07:42<06:18,  6.64s/it]Global Tuning:  44%|████▍     | 44/100 [07:49<06:11,  6.64s/it]Global Tuning:  45%|████▌     | 45/100 [07:56<06:05,  6.64s/it]Global Tuning:  46%|████▌     | 46/100 [08:02<05:58,  6.64s/it]Global Tuning:  47%|████▋     | 47/100 [08:09<05:51,  6.64s/it]Global Tuning:  48%|████▊     | 48/100 [08:16<05:45,  6.64s/it]Global Tuning:  49%|████▉     | 49/100 [08:22<05:38,  6.64s/it]Global Tuning:  50%|█████     | 50/100 [08:29<05:31,  6.64s/it]Global Tuning:  51%|█████     | 51/100 [08:36<05:25,  6.64s/it]Global Tuning:  52%|█████▏    | 52/100 [08:42<05:18,  6.64s/it]Global Tuning:  53%|█████▎    | 53/100 [08:49<05:15,  6.71s/it]Global Tuning:  54%|█████▍    | 54/100 [08:56<05:07,  6.69s/it]Global Tuning:  55%|█████▌    | 55/100 [09:02<05:00,  6.67s/it]Global Tuning:  56%|█████▌    | 56/100 [09:09<04:53,  6.66s/it]Global Tuning:  57%|█████▋    | 57/100 [09:16<04:46,  6.65s/it]Global Tuning:  58%|█████▊    | 58/100 [09:22<04:39,  6.65s/it]Global Tuning:  59%|█████▉    | 59/100 [09:29<04:32,  6.65s/it]Global Tuning:  60%|██████    | 60/100 [09:36<04:25,  6.65s/it]Global Tuning:  61%|██████    | 61/100 [09:42<04:19,  6.64s/it]

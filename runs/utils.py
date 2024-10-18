@@ -23,49 +23,49 @@ def get_parser(**kwargs):
     
     ### Hyperparameters come here
     parser.add_argument(
-        "--n_epochs",
+        "--n-epochs",
         type=int,
         default=20,
         help="Number of epochs for training",
     )
     parser.add_argument(
-        "--n_loop_training",
+        "--n-loop-training",
         type=int,
         default=100,
         help="Number of loops for training",
     )
     parser.add_argument(
-        "--n_loop_production",
+        "--n-loop-production",
         type=int,
         default=20,
         help="Number of loops for production",
     )
     parser.add_argument(
-        "--n_local_steps",
+        "--n-local-steps",
         type=int,
         default=10,
         help="Number of local steps",
     )
     parser.add_argument(
-        "--n_global_steps",
+        "--n-global-steps",
         type=int,
         default=1000,
         help="Number of global steps",
     )
     parser.add_argument(
-        "--n_chains",
+        "--n-chains",
         type=int,
         default=500,
         help="Number of chains",
     )
     parser.add_argument(
-        "--n_max_examples",
+        "--n-max-examples",
         type=int,
         default=30000,
         help="Number of maximum examples",
     )
     parser.add_argument(
-        "--n_flow_sample",
+        "--n-flow-sample",
         type=int,
         default=100000,
         help="Number of flow samples",
@@ -77,31 +77,31 @@ def get_parser(**kwargs):
         help="Momentum",
     )
     parser.add_argument(
-        "--batch_size",
+        "--batch-size",
         type=int,
         default=30000,
         help="Batch size",
     )
     parser.add_argument(
-        "--use_global",
+        "--use-global",
         type=bool,
         default=True,
         help="Use global",
     )
     parser.add_argument(
-        "--keep_quantile",
+        "--keep-quantile",
         type=float,
         default=0.0,
         help="Keep quantile",
     )
     parser.add_argument(
-        "--train_thinning",
+        "--train-thinning",
         type=int,
         default=1,
         help="Train thinning",
     )
     parser.add_argument(
-        "--output_thinning",
+        "--output-thinning",
         type=int,
         default=10,
         help="Output thinning",

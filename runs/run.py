@@ -1,21 +1,25 @@
-# --- For running on CIT
-import psutil
-p = psutil.Process()
-p.cpu_affinity([0])
 import os 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.10"
-# ---
+# # --- For running on CIT
+# import psutil
+# p = psutil.Process()
+# p.cpu_affinity([0])
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.10"
+# # ---
 
 import time
 import utils
-import requests
+# import requests
+# import h5py
 import json
-import h5py
 import numpy as np
 
+print("Importing JAX")
 import jax
 import jax.numpy as jnp
+print("Importing JAX successful")
+
+print(f"Checking for CUDA: JAX devices {jax.devices()}")
 
 from jimgw.jim import Jim
 from jimgw.jim import Jim
@@ -28,7 +32,7 @@ from jimgw.prior import (
     UniformSpherePrior,
 )
 from jimgw.single_event.detector import H1, L1, V1, GroundBased2G
-from jimgw.single_event.likelihood import TransientLikelihoodFD
+from jimgw.single_event.likelihood import TransientLikelihoodFD, HeterodynedTransientLikelihoodFD
 from jimgw.single_event.waveform import RippleIMRPhenomPv2
 from jimgw.transforms import BoundToUnbound
 from jimgw.single_event.transforms import (
@@ -211,10 +215,22 @@ def run_pe(args: argparse.Namespace,
         SphereSpinToCartesianSpinTransform("s2"),
     ]
 
-
-    likelihood = TransientLikelihoodFD(
-        [H1, L1], waveform=waveform, trigger_time=gps, duration=duration, post_trigger_duration=post_trigger
-    )
+    # TODO: memory issues
+    # likelihood = TransientLikelihoodFD(
+    #     ifos, waveform=waveform, trigger_time=gps, duration=duration, post_trigger_duration=post_trigger
+    # )
+    
+    likelihood = HeterodynedTransientLikelihoodFD(ifos, 
+                                                  waveform=waveform, 
+                                                  n_bins = 1000, 
+                                                  trigger_time=trigger_time, 
+                                                  duration=duration, 
+                                                  post_trigger_duration=post_trigger, 
+                                                  prior=prior, 
+                                                  sample_transforms=sample_transforms,
+                                                  likelihood_transforms=likelihood_transforms,
+                                                  popsize=10,
+                                                  n_steps=50)
 
 
     mass_matrix = jnp.eye(prior.n_dim)
@@ -264,6 +280,8 @@ def run_pe(args: argparse.Namespace,
     samples: dict = jim.get_samples()
     jnp.savez(os.path.join(args["outdir"], args["event_id"], "samples.npz"), **samples)
 
+    total_time_end = time.time()
+    print(f"Time taken: {total_time_end - total_time_start} seconds = {(total_time_end - total_time_start) / 60} minutes")
 
 def main():
     parser = utils.get_parser()
