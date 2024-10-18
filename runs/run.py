@@ -222,7 +222,7 @@ def run_pe(args: argparse.Namespace,
     
     likelihood = HeterodynedTransientLikelihoodFD(ifos, 
                                                   waveform=waveform, 
-                                                  n_bins = 1000, 
+                                                  n_bins = 1_000, 
                                                   trigger_time=trigger_time, 
                                                   duration=duration, 
                                                   post_trigger_duration=post_trigger, 
@@ -242,8 +242,8 @@ def run_pe(args: argparse.Namespace,
 
     import optax
 
-    n_epochs = 20
-    n_loop_training = 100
+    n_epochs = 10
+    n_loop_training = 10
     total_epochs = n_epochs * n_loop_training
     start = total_epochs // 10
     learning_rate = optax.polynomial_schedule(
@@ -256,29 +256,30 @@ def run_pe(args: argparse.Namespace,
         sample_transforms=sample_transforms,
         likelihood_transforms=likelihood_transforms,
         n_loop_training=n_loop_training,
-        n_loop_production=args.n_loop_production,
-        n_local_steps=args.n_local_steps,
-        n_global_steps=args.n_global_steps,
-        n_chains=args.n_chains,
+        n_loop_production=20,
+        n_local_steps=10,
+        n_global_steps=1000,
+        n_chains=500,
         n_epochs=n_epochs,
         learning_rate=learning_rate,
-        n_max_examples=args.n_max_examples,
-        n_flow_sample=args.n_flow_sample,
-        momentum=args.momentum,
-        batch_size=args.batch_size,
+        n_max_examples=30000,
+        n_flow_sample=100000,
+        momentum=0.9,
+        batch_size=30000,
         use_global=True,
-        keep_quantile=args.keep_quantile,
-        train_thinning=args.train_thinning,
-        output_thinning=args.output_thinning,
+        keep_quantile=0.0,
+        train_thinning=1,
+        output_thinning=10,
         local_sampler_arg=local_sampler_arg,
         # strategies=[Adam_optimizer,"default"],
     )
 
     jim.sample(jax.random.PRNGKey(42))
+    jim.print_summary()
     
     # Postprocessing comes here
-    samples: dict = jim.get_samples()
-    jnp.savez(os.path.join(args["outdir"], args["event_id"], "samples.npz"), **samples)
+    samples = jim.get_samples()
+    jnp.savez(os.path.join(args.outdir, args.event_id, "samples.npz"), **samples)
 
     total_time_end = time.time()
     print(f"Time taken: {total_time_end - total_time_start} seconds = {(total_time_end - total_time_start) / 60} minutes")

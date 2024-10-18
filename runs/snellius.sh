@@ -3,10 +3,10 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -p gpu
-#SBATCH -t 30:00
+#SBATCH -t 20:00
 #SBATCH --gpus-per-node=1
 #SBATCH --cpus-per-gpu=1
-#SBATCH --mem-per-gpu=20G
+#SBATCH --mem-per-gpu=10G
 
 now=$(date)
 echo "$now"
@@ -22,6 +22,6 @@ module load Python/3.10.4-GCCcore-11.3.0
 conda activate /home/twouters2/miniconda3/envs/jim-dev3
 
 # Run the script
-python $HOME/projects/jim_catalogue/runs/run.py --event-id $GW_ID --n-loop-training 5 --n-loop-production 5
+python $HOME/projects/jim_catalogue/runs/run.py --event-id $GW_ID
 
 echo "DONE"
