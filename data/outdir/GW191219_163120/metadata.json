@@ -1,0 +1,1 @@
+{"f_min": {"H1": 20, "L1": 20, "V1": 20}, "f_max": {"H1": 3584, "L1": 3584, "V1": 3584}, "outdir": "/scratch/daniel.williams/O3b_PE/S191219ax_highspin/Prod5", "webdir": "/home/pe.o3/public_html/LVC/o3b-catalog//GW191219/Prod5", "duration": 32.0, "detectors": ["H1", "L1", "V1"], "trigger_time": 1260808298.45}

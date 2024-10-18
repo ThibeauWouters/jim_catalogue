@@ -19,8 +19,12 @@ event_ids = df["commonName"].values
 ZENODO_DIR = "/home/thibeau.wouters/gw-datasets/GWTC-3/"
 all_zenodo_files = [f for f in os.listdir(ZENODO_DIR) if "nocosmo" in f and f.endswith(".h5")]
 
-print("all_zenodo_files")
-print(all_zenodo_files)
+BILBY_KEYS = ["chirp_mass", "mass_ratio", "a_1", "a_2", "tilt_1", "tilt_2", "phi_12", "phi_jl", "luminosity_distance", "psi", "phase", "iota", "ra", "dec"]
+
+
+#################
+### UTILITIES ###
+#################
 
 def my_decode(x):
     return x[0].decode('utf-8')
@@ -63,15 +67,19 @@ def load_event_metadata(event_id: str,
         
         # Get metadata
         metadata = {}
-        metadata["outdir"] = str(my_decode(config["outdir"][()]))
-        metadata["duration"] = float(my_decode(config["duration"][()]))
-        metadata["detectors"] = eval(my_decode(config["detectors"][()])) 
-        metadata["trigger_time"] = eval(my_decode(config["trigger-time"][()]))
+        
         try:
             metadata["f_min"] = eval(my_decode(config["minimum-frequency"][()]))
             metadata["f_max"] = eval(my_decode(config["maximum-frequency"][()]))
         except Exception as e:
             print(f"Error when trying to get f_min and f_max: {e}")
+            return metadata
+        
+        metadata["outdir"] = str(my_decode(config["outdir"][()]))
+        metadata["webdir"] = str(my_decode(config["webdir"][()]))
+        metadata["duration"] = float(my_decode(config["duration"][()]))
+        metadata["detectors"] = eval(my_decode(config["detectors"][()])) 
+        metadata["trigger_time"] = eval(my_decode(config["trigger-time"][()]))
         
         # TODO: not sure if channels are needed?
         # metadata["channel_dict"] = eval(my_decode(config["channel-dict"][()]))
@@ -142,6 +150,34 @@ def get_data_and_psd(run_dir: str, outdir: str = "./outdir/") -> int:
         np.savez(os.path.join(outdir, f"{ifo.name}_datadump.npz"), frequencies=frequencies, data=strain, psd=psd_values)
         
     return 1
+
+def get_pe_samples(webdir: str, outdir: str = "./outdir/") -> tuple[int, np.array]:
+    """
+    Fetches the PE samples from the run directory. The webdir is where the PE summary was stored
+    """
+    
+    samples_dir = os.path.join(webdir, "results/samples")
+    try:
+        json_files_list = [f for f in os.listdir(samples_dir) if f.endswith(".json")]
+    except Exception as e:
+        print(f"Error when trying to list the json files in {samples_dir}: {e}")
+        return 0, np.array([])
+    
+    if len(json_files_list) != 1:
+        print(f"Found {len(json_files_list)} json file in {samples_dir}, this is not good")
+        return 0, np.array([])
+    
+    with open(os.path.join(samples_dir, json_files_list[0]), "r") as f:
+        samples = json.load(f)
+        samples = samples["posterior"]["content"]
+        my_samples = {}
+        for k, v in samples.items():
+            if k in BILBY_KEYS:
+                my_samples[k] = np.array(v)
+                
+        my_samples = list(my_samples.values())
+    
+    return 1, np.array(my_samples)
         
 def main():
     
@@ -162,12 +198,20 @@ def main():
             success = get_data_and_psd(metadata["outdir"], outdir = outdir)
             if not success:
                 failed_events.append(event_id)
-                
-            else:
-                if not os.path.exists(outdir):
-                    os.makedirs(outdir)
-                with open(os.path.join(outdir, "metadata.json"), "w") as f:
-                    json.dump(metadata, f)
+            
+            if not os.path.exists(outdir):
+                os.makedirs(outdir)
+            
+            with open(os.path.join(outdir, "metadata.json"), "w") as f:
+                json.dump(metadata, f)
+            
+            # Also try to get the PE samples, but this might not work        
+            success, pe_samples = get_pe_samples(metadata["webdir"], outdir = outdir)
+            if success:
+                # Save the pe samples:
+                np.savez(os.path.join(outdir, "LIGO_PE_samples.npz"), samples=pe_samples)
+                    
+        # break
                 
     print(f"There were {len(failed_events)}/{len(event_ids)} failed events: {failed_events}")
         

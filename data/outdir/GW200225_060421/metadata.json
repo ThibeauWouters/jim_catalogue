@@ -1,1 +1,1 @@
-{"outdir": "/home/daniel.williams/events/O3/o3b/run_directories/S200225a/Prod5", "duration": 8.0, "detectors": ["H1", "L1"], "trigger_time": 1266645879.396484, "f_min": {"H1": 20, "L1": 20}, "f_max": {"H1": 896, "L1": 896}}
+{"f_min": {"H1": 20, "L1": 20}, "f_max": {"H1": 896, "L1": 896}, "outdir": "/home/daniel.williams/events/O3/o3b/run_directories/S200225a/Prod5", "webdir": "/home/pe.o3/public_html/LVC/o3b-catalog//S200225a/Prod5", "duration": 8.0, "detectors": ["H1", "L1"], "trigger_time": 1266645879.396484}
